@@ -8,16 +8,18 @@ import java.util.Random;
 
 public class GameBoard extends JFrame implements MouseListener {
     private Phone[] phones = new Phone[5];
+
     private CustomStructure<Phone> brokenPhones = new CustomStructure<>(State.BURNED);
     private CustomStructure<Phone> healthyPhones = new CustomStructure<>(State.HEALTHY);
 
-    private int index = 0;
+    private int phoneIndex = 0;
 
 
     private Phone currentPhone;
 
     private Pixel chosenPixel;
-    private int counter;
+
+    private int clickCounter;
 
     public GameBoard() throws HeadlessException {
         super.addMouseListener(this);
@@ -26,8 +28,9 @@ public class GameBoard extends JFrame implements MouseListener {
 
 
     public void start() {
+        currentPhone = phones[phoneIndex++];
         initWindow();
-        currentPhone = phones[index++];
+
 
     }
 
@@ -35,18 +38,17 @@ public class GameBoard extends JFrame implements MouseListener {
         super.setSize(800, 800);
         super.setVisible(true);
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        super.setTitle("Serial number --- " + currentPhone.getSerialNumber());
     }
 
     private void generatePhones() {
         Random random = new Random();
-
         Color[] colors = {Color.RED, Color.GREEN, Color.BLUE};
         State[] states = {State.HEALTHY, State.HALF_BURNED, State.BURNED};
 
         for (int i = 0; i < 5; i++) {
             Phone phone;
             Pixel[][] pixels = new Pixel[8][8];
-
             for (int row = 0; row < pixels.length; row++) {
                 for (int col = 0; col < pixels[row].length; col++) {
                     Color randomColor = generateRandomColor(colors, random);
@@ -56,12 +58,9 @@ public class GameBoard extends JFrame implements MouseListener {
                     pixels[row][col] = pixel;
                 }
             }
-
             phone = new Phone(pixels);
             phones[i] = phone;
         }
-
-
     }
 
     @Override
@@ -81,7 +80,7 @@ public class GameBoard extends JFrame implements MouseListener {
     }
 
     private void selectNextPhone() {
-        if (index == 5) {
+        if (phoneIndex == 5) {
             System.out.println(brokenPhones.toString());
             System.out.println(healthyPhones.toString());
             return;
@@ -101,35 +100,40 @@ public class GameBoard extends JFrame implements MouseListener {
 
         if (!clickedPixel.equals(chosenPixel)) {
             chosenPixel = clickedPixel;
-            counter = 1;
+            clickCounter = 1;
         } else if (!chosenPixel.getColor().equals(Color.BLACK)) {
-            counter++;
+            clickCounter++;
 
-            if (counter == 3) {
-                currentPhone.increaseTotalCount();
-                System.out.println(currentPhone.getTotalCount());
+            if (clickCounter == 3) {
+                currentPhone.increaseTotalClickCount();
+
                 if (chosenPixel.getState().equals(State.HALF_BURNED) || chosenPixel.getState().equals(State.BURNED)) {
                     chosenPixel.setColor(Color.BLACK);
                     currentPhone.increaseBurnedPixelsCount();
-
-                    if (currentPhone.getBurnedPixels() >= 32) {
-                        showStatusOfThePhone("broken");
-                        this.brokenPhones.addData(currentPhone);
-                        this.selectNextPhone();
-                    }
+                    checkForBrokenPhoneConditions();
                 }
-                ;
-
-                if (currentPhone.getTotalCount() == 64) {
-                    showStatusOfThePhone("healthy");
-                    this.healthyPhones.addData(currentPhone);
-                    this.selectNextPhone();
-                }
+                checkForHealthyPhoneConditions();
                 super.repaint();
             }
         }
 
 
+    }
+
+    private void checkForHealthyPhoneConditions() {
+        if (currentPhone.getTotalCount() == 64) {
+            showStatusOfThePhone("healthy");
+            this.healthyPhones.addData(currentPhone);
+            this.selectNextPhone();
+        }
+    }
+
+    private void checkForBrokenPhoneConditions() {
+        if (currentPhone.getBurnedPixels() >= 32) {
+            showStatusOfThePhone("broken");
+            this.brokenPhones.addData(currentPhone);
+            this.selectNextPhone();
+        }
     }
 
     private void showStatusOfThePhone(String status) {

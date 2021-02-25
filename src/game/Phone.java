@@ -4,18 +4,18 @@ import java.awt.*;
 import java.util.Random;
 
 public class Phone {
-    private Pixel[][]pixels;
+    private Pixel[][] pixels;
     private String serialNumber;
-    private int burnedPixels=0;
-    private int totalCount=0;
+    private int burnedPixels = 0;
+    private int totalCount = 0;
 
     public Phone(Pixel[][] pixels) {
         this.pixels = pixels;
-       setSerialNumber();
+        setSerialNumber();
     }
 
-    public void render(Graphics g){
-        g.drawString(String.format("Serial number --- %s",serialNumber),400,400);
+    public void render(Graphics g) {
+
         for (Pixel[] row : pixels) {
             for (Pixel col : row) {
                 col.render(g);
@@ -24,10 +24,10 @@ public class Phone {
     }
 
     public void setSerialNumber() {
-        Random random=new Random();
-        String randomS="abcdefg36765323543";
-        StringBuilder result=new StringBuilder();
-        for (int i = 0; i <10 ; i++) {
+        Random random = new Random();
+        String randomS = "abcdefg36765323543";
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < 10; i++) {
             result.append(randomS.charAt(random.nextInt(randomS.length())));
         }
         this.serialNumber = result.toString();
@@ -38,12 +38,11 @@ public class Phone {
     }
 
 
-
-    public void increaseBurnedPixelsCount(){
+    public void increaseBurnedPixelsCount() {
         this.burnedPixels++;
     }
 
-    public void increaseTotalCount(){
+    public void increaseTotalClickCount() {
         this.totalCount++;
     }
 
@@ -55,8 +54,12 @@ public class Phone {
         return totalCount;
     }
 
+    public String getSerialNumber() {
+        return serialNumber;
+    }
+
     @Override
     public String toString() {
-        return "Serial number -- "+serialNumber;
+        return "Serial number -- " + serialNumber;
     }
 }
