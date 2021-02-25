@@ -16,16 +16,28 @@ public class Pixel {
         this.state = state;
     }
 
+    /**
+     * render method
+     * @param g instance of Graphics
+     */
     public void render(Graphics g) {
         fill(g);
         draw(g);
     }
 
+    /**
+     * fill method
+     * @param g instance of Graphics
+     */
     private void fill(Graphics g) {
         g.setColor(color);
         g.fillRect(x, y, PIXEL_SIZE, PIXEL_SIZE);
     }
 
+    /**
+     * drawing method
+     * @param g instance of Graphics
+     */
     private void draw(Graphics g) {
         g.setColor(Color.black);
         g.drawRect(x, y, PIXEL_SIZE, PIXEL_SIZE);
