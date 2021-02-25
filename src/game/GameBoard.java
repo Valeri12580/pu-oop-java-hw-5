@@ -107,7 +107,8 @@ public class GameBoard extends JFrame implements MouseListener {
                 };
 
                 if(currentPhone.getBurnedPixels()>=32){
-                    System.out.println("The product is broken!");
+                    showStatusOfThePhone("broken");
+
                     this.selectNextPhone();
                 }
 
@@ -116,6 +117,14 @@ public class GameBoard extends JFrame implements MouseListener {
         }
 
 
+    }
+
+    private void showStatusOfThePhone(String status){
+        JDialog dialog=new JDialog(this,true);
+        dialog.setLayout(new FlowLayout());
+        dialog.add(new JLabel(String.format("The phone is: %s",status)));
+        dialog.setSize(400,400);
+        dialog.setVisible(true);
     }
 
     @Override
