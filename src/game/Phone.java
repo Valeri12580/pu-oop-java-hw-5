@@ -37,16 +37,14 @@ public class Phone {
         return pixels;
     }
 
-    public String getSerialNumber() {
-        return serialNumber;
-    }
+
 
     public void increaseBurnedPixelsCount(){
         this.burnedPixels++;
     }
 
     public void increaseTotalCount(){
-        this.burnedPixels++;
+        this.totalCount++;
     }
 
     public int getBurnedPixels() {

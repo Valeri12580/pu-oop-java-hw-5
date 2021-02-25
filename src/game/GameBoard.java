@@ -81,7 +81,7 @@ public class GameBoard extends JFrame implements MouseListener {
     }
 
     private void selectNextPhone() {
-        if (index == 4) {
+        if (index == 5) {
             System.out.println(brokenPhones.toString());
             System.out.println(healthyPhones.toString());
             return;
@@ -107,11 +107,10 @@ public class GameBoard extends JFrame implements MouseListener {
 
             if (counter == 3) {
                 currentPhone.increaseTotalCount();
-
+                System.out.println(currentPhone.getTotalCount());
                 if (chosenPixel.getState().equals(State.HALF_BURNED) || chosenPixel.getState().equals(State.BURNED)) {
                     chosenPixel.setColor(Color.BLACK);
                     currentPhone.increaseBurnedPixelsCount();
-                    currentPhone.increaseTotalCount();
 
                     if (currentPhone.getBurnedPixels() >= 32) {
                         showStatusOfThePhone("broken");
@@ -126,8 +125,6 @@ public class GameBoard extends JFrame implements MouseListener {
                     this.healthyPhones.addData(currentPhone);
                     this.selectNextPhone();
                 }
-
-
                 super.repaint();
             }
         }
