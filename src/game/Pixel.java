@@ -31,19 +31,23 @@ public class Pixel {
         g.drawRect(x, y, PIXEL_SIZE, PIXEL_SIZE);
     }
 
-    public void setY(int y) {
+    private void setY(int y) {
         this.y = y * PIXEL_SIZE;
     }
 
-    public void setX(int x) {
+    private void setX(int x) {
         this.x = x * PIXEL_SIZE;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public State getState() {
+        return state;
     }
 
     public void setColor(Color color) {
         this.color = color;
-    }
-
-    public void setState(State state) {
-        this.state = state;
     }
 }

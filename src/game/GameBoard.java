@@ -7,18 +7,25 @@ import java.awt.event.MouseListener;
 import java.util.Random;
 
 public class GameBoard extends JFrame implements MouseListener {
+    private Phone[]phones=new Phone[5];
+    private int index=0;
 
-    private Pixel[][]pixels=new Pixel[8][8];
+
+    private Phone currentPhone;
+
+    private Pixel chosenPixel;
+    private int counter;
 
     public GameBoard() throws HeadlessException {
         super.addMouseListener(this);
+        generatePhones();
     }
 
 
 
     public void start(){
-        generateFields();
         initWindow();
+        currentPhone=phones[index++];
 
     }
 
@@ -28,31 +35,37 @@ public class GameBoard extends JFrame implements MouseListener {
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    private void generateFields(){
+    private void generatePhones(){
         Random random=new Random();
 
         Color[]colors={Color.RED,Color.GREEN,Color.BLUE};
         State[]states={State.HEALTHY,State.HALF_BURNED,State.BURNED};
 
-        for (int row = 0; row < pixels.length; row++) {
-            for (int col = 0; col < pixels[row].length; col++) {
-                Color randomColor=generateRandomColor(colors,random);
-                State randomState=generateRandomState(states,random);
-                Pixel pixel=new Pixel(row,col,randomColor,randomState);
-                pixels[row][col]=pixel;
+        for (int i = 0; i < 5; i++) {
+            Phone phone;
+            Pixel[][]pixels=new Pixel[8][8];
+
+            for (int row = 0; row < pixels.length; row++) {
+                for (int col = 0; col < pixels[row].length; col++) {
+                    Color randomColor=generateRandomColor(colors,random);
+                    State randomState=generateRandomState(states,random);
+
+                    Pixel pixel=new Pixel(row,col,randomColor,randomState);
+                    pixels[row][col]=pixel;
+                }
             }
+
+            phone=new Phone(pixels);
+            phones[i]=phone;
         }
+
+
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-
-        for (Pixel[] row : pixels) {
-            for (Pixel col : row) {
-                col.render(g);
-            }
-        }
+        currentPhone.render(g);
     }
 
     private Color generateRandomColor(Color[]colors, Random random){
@@ -65,9 +78,43 @@ public class GameBoard extends JFrame implements MouseListener {
         return state[i];
     }
 
+    private void selectNextPhone(){
+
+        this.start();
+        super.repaint();
+    }
+
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        int row = e.getY() / Pixel.PIXEL_SIZE;
+        int col = e.getX() / Pixel.PIXEL_SIZE;
+
+        Pixel clickedPixel = currentPhone.getPixels()[row][col];
+
+        if(!clickedPixel.equals(chosenPixel)){
+            chosenPixel=clickedPixel;
+            counter=1;
+        }else if(!chosenPixel.getColor().equals(Color.BLACK)){
+            counter++;
+
+            if(counter==3){
+                if(chosenPixel.getState().equals(State.HALF_BURNED) || chosenPixel.getState().equals(State.BURNED)){
+
+                   chosenPixel.setColor(Color.BLACK);
+                    currentPhone.increaseBurnedPixelsCount();
+                    currentPhone.increaseTotalCount();
+                };
+
+                if(currentPhone.getBurnedPixels()>=32){
+                    System.out.println("The product is broken!");
+                    this.selectNextPhone();
+                }
+
+                super.repaint();
+            }
+        }
+
 
     }
 
