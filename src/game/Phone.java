@@ -15,7 +15,6 @@ public class Phone {
     }
 
     public void render(Graphics g) {
-
         for (Pixel[] row : pixels) {
             for (Pixel col : row) {
                 col.render(g);
@@ -23,6 +22,9 @@ public class Phone {
         }
     }
 
+    /**
+     * set serial number
+     */
     public void setSerialNumber() {
         Random random = new Random();
         String randomS = "abcdefg36765323543";

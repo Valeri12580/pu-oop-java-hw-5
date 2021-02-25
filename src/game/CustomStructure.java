@@ -10,6 +10,10 @@ public class CustomStructure<T> {
         this.state = state;
     }
 
+    /**
+     * add singe record to the data
+     * @param data
+     */
     public void addData(T data){
         records.add(data);
     }

@@ -6,9 +6,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Random;
 
-public class GameBoard extends JFrame implements MouseListener {
+public class Board extends JFrame implements MouseListener {
     private Phone[] phones = new Phone[5];
-
     private CustomStructure<Phone> brokenPhones = new CustomStructure<>(State.BURNED);
     private CustomStructure<Phone> healthyPhones = new CustomStructure<>(State.HEALTHY);
 
@@ -21,12 +20,15 @@ public class GameBoard extends JFrame implements MouseListener {
 
     private int clickCounter;
 
-    public GameBoard() throws HeadlessException {
+    public Board() throws HeadlessException {
         super.addMouseListener(this);
         generatePhones();
     }
 
 
+    /**
+     * start
+     */
     public void start() {
         currentPhone = phones[phoneIndex++];
         initWindow();
@@ -34,6 +36,9 @@ public class GameBoard extends JFrame implements MouseListener {
 
     }
 
+    /*
+    init of windows
+     */
     private void initWindow() {
         super.setSize(800, 800);
         super.setVisible(true);
@@ -41,6 +46,9 @@ public class GameBoard extends JFrame implements MouseListener {
         super.setTitle("Serial number --- " + currentPhone.getSerialNumber());
     }
 
+    /*
+    generation of phones
+     */
     private void generatePhones() {
         Random random = new Random();
         Color[] colors = {Color.RED, Color.GREEN, Color.BLUE};
@@ -69,16 +77,31 @@ public class GameBoard extends JFrame implements MouseListener {
         currentPhone.render(g);
     }
 
+    /**
+     * generate color from array of colors
+     * @param colors array of colors
+     * @param random random instance
+     * @return random color
+     */
     private Color generateRandomColor(Color[] colors, Random random) {
         int i = random.nextInt(3);
         return colors[i];
     }
 
+    /**
+     * generate state from array of states
+     * @param state array of states
+     * @param random random instance
+     * @return random state
+     */
     private State generateRandomState(State[] state, Random random) {
         int i = random.nextInt(3);
         return state[i];
     }
 
+    /**
+     * select next phone
+     */
     private void selectNextPhone() {
         if (phoneIndex == 5) {
             System.out.println(brokenPhones.toString());
@@ -90,6 +113,10 @@ public class GameBoard extends JFrame implements MouseListener {
     }
 
 
+    /**
+     * event handler
+     * @param e event
+     */
     @Override
     public void mouseClicked(MouseEvent e) {
 
@@ -120,6 +147,9 @@ public class GameBoard extends JFrame implements MouseListener {
 
     }
 
+    /**
+     * check for healthy phone conditions
+     */
     private void checkForHealthyPhoneConditions() {
         if (currentPhone.getTotalCount() == 64) {
             showStatusOfThePhone("healthy");
@@ -128,6 +158,9 @@ public class GameBoard extends JFrame implements MouseListener {
         }
     }
 
+    /**
+     * check for broken phone conditions
+     */
     private void checkForBrokenPhoneConditions() {
         if (currentPhone.getBurnedPixels() >= 32) {
             showStatusOfThePhone("broken");
@@ -136,6 +169,10 @@ public class GameBoard extends JFrame implements MouseListener {
         }
     }
 
+    /**
+     * show the status of the phone
+     * @param status broken or healthy
+     */
     private void showStatusOfThePhone(String status) {
         JDialog dialog = new JDialog(this, true);
         dialog.setLayout(new FlowLayout());
