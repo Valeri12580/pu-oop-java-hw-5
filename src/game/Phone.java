@@ -15,6 +15,7 @@ public class Phone {
     }
 
     public void render(Graphics g){
+        g.drawString(String.format("Serial number --- %s",serialNumber),400,400);
         for (Pixel[] row : pixels) {
             for (Pixel col : row) {
                 col.render(g);
@@ -54,5 +55,10 @@ public class Phone {
 
     public int getTotalCount() {
         return totalCount;
+    }
+
+    @Override
+    public String toString() {
+        return "Serial number -- "+serialNumber;
     }
 }
